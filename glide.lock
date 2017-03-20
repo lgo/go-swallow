@@ -1,0 +1,12 @@
+hash: 96ce8fd48f6da4dcb2972263bcf30fb7de5d49fd2854f1e164a42f8daf73c393
+updated: 2017-03-19T18:47:15.342868439-07:00
+imports:
+- name: github.com/garyburd/redigo
+  version: 8873b2f1995f59d4bcdd2b0dc9858e2cb9bf0c13
+- name: github.com/Sirupsen/logrus
+  version: ba1b36c82c5e05c4f912a88eab0dcd91a171688f
+- name: golang.org/x/sys
+  version: 99f16d856c9836c42d24e7ab64ea72916925fa97
+  subpackages:
+  - unix
+testImports: []
