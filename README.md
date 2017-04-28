@@ -16,6 +16,7 @@ Using go-swallow is as as simple as starting up your worker with `worker.Run` an
  - PostgreSQL
 - Allow dynamic perform arguments (will have unvalidated types)
 - Provide a channel for the client to retrieve results
+- Safely recover from worker errors, and passing the error on to client channels
 
 ### Issues
 - Registering duplicate or primitive types as arguments or return signatures

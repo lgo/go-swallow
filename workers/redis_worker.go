@@ -128,12 +128,17 @@ func (w *RedisWorker) process(options *proto.RedisWorkerProcessOptions, id int) 
 				}
 				result := processMessage(msg)
 				log.WithFields(log.Fields{
-					"workerID":    id,
-					"jobFuncName": msg.Job.FuncName,
-					"jobFuncArgs": msg.Job.FuncArgs,
-					"result":      result,
+					"WorkerID":     id,
+					"JobID":        msg.JobID,
+					"Job.FuncName": msg.Job.FuncName,
+					"Job.FuncArgs": msg.Job.FuncArgs,
+					"Result":       result,
 				}).Info("Finished job")
 
+				// var outbuff bytes.Buffer
+				// msg, err := encoders.GobEncode(outbuff)
+
+				// err = conn.Do("LPUSH", result)
 			default:
 				log.WithFields(log.Fields{
 					"id":      id,

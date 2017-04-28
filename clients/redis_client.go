@@ -29,9 +29,8 @@ func NewRedisClient(options *proto.RedisClientOptions) (redisClient *RedisClient
 	return
 }
 
-func (c *RedisClient) Perform(fn interface{}, args interface{}, extra ...interface{}) error {
+func (c *RedisClient) Perform(fn interface{}, args interface{}, extra ...interface{}) (chan interface{}, error) {
 	conn := c.pool.Get()
-	defer conn.Close()
 
 	// Create job from function and arguments
 	jobRequest, err := util.CreateJobRequest(fn, args)
@@ -39,7 +38,7 @@ func (c *RedisClient) Perform(fn interface{}, args interface{}, extra ...interfa
 		log.WithFields(log.Fields{
 			"error": err,
 		}).Error("Error creating job request")
-		return err
+		return nil, err
 	}
 
 	// Generate and serialize message
@@ -55,7 +54,7 @@ func (c *RedisClient) Perform(fn interface{}, args interface{}, extra ...interfa
 		log.WithFields(log.Fields{
 			"error": err,
 		}).Error("Error encoding message")
-		return err
+		return nil, err
 	}
 	writer.Flush()
 	data := buff.Bytes()
@@ -67,7 +66,7 @@ func (c *RedisClient) Perform(fn interface{}, args interface{}, extra ...interfa
 			"error": err,
 			"data":  data,
 		}).Error("Error queueing message")
-		return err
+		return nil, err
 	}
 	log.WithFields(log.Fields{
 		"jobID":               msg.JobID,
@@ -75,7 +74,22 @@ func (c *RedisClient) Perform(fn interface{}, args interface{}, extra ...interfa
 		"jobRequest.FuncArgs": jobRequest.FuncArgs,
 	}).Info("Queued job")
 
-	return nil
+	result := make(chan interface{})
+
+	willWaitForResult := true
+	if willWaitForResult {
+		go waitForResult(conn, msg, result)
+	} else {
+		conn.Close()
+	}
+
+	return result, nil
+}
+
+func waitForResult(conn redis.Conn, msg *proto.Message, result chan interface{}) {
+	defer conn.Close()
+	resp, _ := conn.Do("BLPOP", msg.JobID, 0)
+	result <- resp
 }
 
 func (c *RedisClient) Close() error {
