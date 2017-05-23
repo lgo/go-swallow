@@ -28,7 +28,7 @@ func clientMain() {
 }
 ```
 
-(see the below for a more detailed example with initialization)
+(see [example usage](https://github.com/xLegoz/go-swallow#example-usage) for more details, including initialization)
 
 ### Features
 - Worker and client Redis backend
