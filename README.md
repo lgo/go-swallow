@@ -12,8 +12,8 @@ Using go-swallow is as as simple as starting up your worker with `worker.Run` an
 ### Future features
 - Reliability guarantees (i.e. use `BRPOPLPUSH` to keep persist jobs)
 - Implement additional backends
- -  Direct TCP
- - PostgreSQL
+  - Direct TCP
+  - PostgreSQL
 - Allow dynamic perform arguments (will have unvalidated types)
 - Provide a channel for the client to retrieve results
 - Safely recover from worker errors, and passing the error on to client channels
