@@ -4,6 +4,32 @@ go-swallow is a Go job library inspired from the ease of usability provided by S
 
 Using go-swallow is as as simple as starting up your worker with `worker.Run` and queue jobs with `client.Perform`!
 
+```go
+// Create my job
+func Add(args *Args) {
+  result := args.A + args.B
+  log.Infof("Look ma, I added! %d + %d = %d", args.A, args.B, result)
+  return result
+}
+
+func serverMain() {
+  // Initialize the job worker
+  ...
+  // Start processing jobs!
+  w.Run()
+}
+
+
+func clientMain() {
+  // Initialize the job queue connection
+  ...
+  // Start a job!
+  client.Perform(jobs.Add, jobs.Args{A: 1, B: 2})
+}
+```
+
+(see the below for a more detailed example with initialization)
+
 ### Features
 - Worker and client Redis backend
 - Registering functions as jobs
